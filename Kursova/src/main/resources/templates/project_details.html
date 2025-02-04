@@ -1,0 +1,6 @@
+<h1 th:text="${project.name}"></h1>
+<h2>Працівники</h2>
+<ul>
+  <li th:each="e : ${project.employees}" th:text="${e.name}"></li>
+</ul>
+<a href="/projects">Назад</a>

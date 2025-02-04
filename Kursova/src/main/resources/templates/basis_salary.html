@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8">
+    <title>Розрахунок зарплати</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0-alpha2/dist/css/bootstrap.css}">
+    <link th:rel="stylesheet" type="text/css" th:href="style.css">
+  </head>
+  <body>
+    <h1 th:text="|Заробітна плата|" class="text-center"></h1>
+    <table class="table text-center">
+      <tbody>
+        <tr><td th:text="${'Працівник: ' + basis.name}"></td></tr>
+        <tr><td th:text="${'Загальний час (дні): ' + basis.total_time}"></td></tr>
+        <tr><td th:text="${'Розрахунок зарплати: ' + salary}"></td></tr>
+        <tr><td th:text="${'Податки (-5%): ' + deductions.tax}"></td></tr>
+        <tr><td th:text="${'Військовий збір (-1.5%): ' + deductions.militaryTax}"></td></tr>
+        <tr><td th:text="${'Надбавка (+4.5%): ' + bonus}"></td></tr>
+        <tr><td th:text="${'Премія (+6%): ' + premium}"></td></tr>
+        <tr><td th:text="${'Зарплата після відрахувань та надбавок: ' + (salary + bonus + premium)}"></td></tr>
+      </tbody>
+    </table>
+      <div class="d-flex justify-content-center mt-3">
+        <a th:href="@{/basis}" class="btn btn-outline-primary btnsm">Повернутися назад</a>
+      </div>
+    <script th:src="@{/webjars/jquery/3.6.4/dist/jquery.js}"></script>
+    <script th:src="@{/webjars/popperjs__core/2.11.7/dist/umd/popper.js}"></script>
+    <script th:src="@{/webjars/bootstrap/5.3.0-alpha2/dist/js/bootstrap.bundle.js}"></script>
+  </body>
+</html>

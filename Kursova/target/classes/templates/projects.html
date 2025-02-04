@@ -1,0 +1,27 @@
+<h1>Всі проєкти</h1>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Назва</th>
+    <th>Кількість працівників</th>
+    <th>Видалити</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="p : ${projects}">
+    <td th:text="${p.id}"></td>
+    <td th:text="${p.name}"></td>
+    <td th:text="${p.employees.size()}"></td>
+    <td>
+      <a th:href="@{/projects/delete(id=${p.id})}">Видалити</a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<h2>Додати новий проєкт</h2>
+<form action="/projects/add" method="post">
+  <input type="text" name="name" placeholder="Назва проєкту">
+  <button type="submit">Додати</button>
+</form>

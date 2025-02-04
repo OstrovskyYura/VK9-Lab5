@@ -1,0 +1,27 @@
+<h1>Всі відділи</h1>
+<table class="table table-sm table-hover text-center">
+  <thead class="table-dark">
+  <tr>
+    <th>ID</th>
+    <th>Назва</th>
+    <th>Кількість працівників</th>
+    <th>Видалити</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="d : ${departments}">
+    <td th:text="${d.id}"></td>
+    <td th:text="${d.name}"></td>
+    <td th:text="${d.employees.size()}"></td>
+    <td>
+      <a th:href="@{/departments/delete(id=${d.id})}" class="btn btn-sm btn-outline-danger">Видалити</a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<h2>Додати новий відділ</h2>
+<form action="/departments/add" method="post">
+  <input type="text" name="name" placeholder="Назва відділу" class="form-control-sm">
+  <button type="submit" class="btn btn-outline-primary btn-sm">Додати</button>
+</form>

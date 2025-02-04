@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Patients</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0-alpha2/dist/css/bootstrap.css}">
+    <link th:rel="stylesheet" type="text/css" th:href="style.css">
+</head>
+<body>
+<h1 th:text="|Всі працівники|" class="text-center"></h1>
+<table class="table table-sm table-hover text-center">
+    <thead class="table-dark">
+    <tr>
+        <th>Id</th>
+        <th>ПІБ</th>
+        <th>Адреса</th>
+        <th>Номер телефона</th>
+        <th>Елек. пошта</th>
+        <th>Стаж роботи</th>
+        <th>Посади</th>
+        <th>Відділ</th>
+        <th>Видалити</th>
+        <th>Редагувати</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="p : ${employees}">
+        <td th:text="${p.id}"></td>
+        <td th:text="${p.name}"></td>
+        <td th:text="${p.address}"></td>
+        <td th:text="${p.phone}"></td>
+        <td th:text="${p.email}"></td>
+        <td th:text="${p.medicalCardNumber}"></td>
+        <td th:text="${p.diagnosis}"></td>
+        <td th:text="${p.department != null ? p.department.name : 'Без відділу'}"></td>
+        <td>
+            <a class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#myconfirm"
+               th:attr="data-bslink=@{/delete_employees(id=${p.id})}, data-bs-text=${p.name}, data-bs-id=${p.id}">Видалити</a>
+        </td>
+        <td><a th:href="@{/edit_employees(id=${p.id})}" class="btn btn-sm btn-outline-secondary">Редагувати</a></td>
+    </tr>
+    </tbody>
+
+</table>
+<div class="modal fade" id="myconfirm" data-bsbackdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticWarningLabel" ariahidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticWarningLabel">Увага!</h1>
+                <button type="button" class="btn-close" databs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Ви впевнені, що хочете видалити пацієнта?<br/>
+                Якщо натиснути видалити, то цю дії <i>не можна
+                скасувати</i>.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btnsecondary" data-bs-dismiss="modal">Скасувати</button>
+                <a class="btn btn-danger deletebutton">Видалити</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var myConfirmModal = document.getElementById('myconfirm')
+    myConfirmModal.addEventListener('show.bs.modal', function
+        (event) {
+        var button = event.relatedTarget
+        var link = button.getAttribute('data-bs-link')
+        var tid = button.getAttribute('data-bs-id')
+        var text = button.getAttribute('data-bs-text')
+        var modalTitle = myConfirmModal.querySelector('.modaltitle')
+        modalTitle.textContent = 'Deleting basis: ' + text + '(' + tid + ')'
+        var deleteButton = myConfirmModal.querySelector('.delete-button')
+        deleteButton.setAttribute("href", link)
+    })
+</script>
+<form action="add_employees" method="post">
+    <input type="text" name="name" placeholder="ПІБ" class="form-control-sm">
+    <input type="text" name="address" placeholder="Адреса" class="form-control-sm">
+    <input type="text" name="phone" placeholder="Номер телефона" class="form-control-sm">
+    <input type="text" name="email" placeholder="Елек. пошта" class="form-control-sm">
+    <input type="number" name="medical_card_number" placeholder="Стаж роботи" class="form-control-sm">
+    <input type="text" name="diagnosis" placeholder="Посади" class="form-control-sm">
+
+    <select name="departmentId" class="form-control-sm">
+        <option value="">Виберіть відділ</option>
+        <option th:each="d : ${departments}" th:value="${d.id}" th:text="${d.name}"></option>
+    </select>
+
+    <button type="submit" class="btn btn-outline-primary btn-sm">Додати</button>
+</form>
+
+<script th:src="@{/webjars/jquery/3.6.4/dist/jquery.js}"></script>
+<script th:src="@{/webjars/popperjs__core/2.11.7/dist/umd/popper.js}"></script>
+<script th:src="@{/webjars/bootstrap/5.3.0-alpha2/dist/js/bootstrap.bundle.js}"></script>
+</body>
+</html>

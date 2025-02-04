@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Редагування</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0-alpha2/dist/css/bootstrap.css}">
+    <link th:rel="stylesheet" type="text/css" th:href="style.css">
+</head>
+<body>
+<div class="container">
+    <div class="text-wrapper">
+        <h1>Редагування працівника</h1>
+    </div>
+    <div class="button-wrapper">
+        <form action="update_employees" method="post">
+            <input type="hidden" name="id" th:value="${employees.id}">
+            <label for="tname" class="form-controlsm">Ім'я</label><br/>
+            <input type="text" th:value="${employees.name}" id="tname" name="name" class="form-control-sm"><br/>
+            <label for="taddress" class="form-controlsm">Адреса</label><br/>
+            <input type="text" th:value="${employees.address}" id="taddress" name="address" class="form-control-sm"><br/>
+            <label for="tphone" class="form-control-sm">Номер телефона</label><br/>
+            <input type="text" th:value="${employees.phone}" id="tphone" name="phone" class="form-control-sm"><br/>
+            <label for="temail" class="form-control-sm">Елек. пошта</label><br/>
+            <input type="text" th:value="${employees.email}" id="temail" name="email" class="form-control-sm"><br/>
+            <label for="tcard" class="form-control-sm">Стаж роботи</label><br/>
+            <input type="number" th:value="${employees.medicalCardNumber}" id="tcard" name="medical_card_number" class="form-control-sm"><br/>
+            <label for="tdiagnosis" class="form-controlsm">Посади</label><br/>
+            <input type="text" th:value="${employees.diagnosis}" id="tdiagnosis" name="diagnosis" class="form-control-sm"><br/>
+            <button type="submit" class="btn btn-outlineprimary btn-sm">Оновити</button>
+        </form>
+    </div>
+</div>
+<script th:src="@{/webjars/jquery/3.6.4/dist/jquery.js}"></script>
+<script th:src="@{/webjars/popperjs__core/2.11.7/dist/umd/popper.js}"></script>
+<script th:src="@{/webjars/bootstrap/5.3.0-alpha2/dist/js/bootstrap.bundle.js}"></script>
+</body>
+</html>
