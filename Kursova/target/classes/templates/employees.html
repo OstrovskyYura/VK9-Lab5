@@ -11,16 +11,15 @@
 <table class="table table-sm table-hover text-center">
     <thead class="table-dark">
     <tr>
-        <th>Id</th>
+        <th>ID</th>
         <th>ПІБ</th>
         <th>Адреса</th>
-        <th>Номер телефона</th>
-        <th>Елек. пошта</th>
+        <th>Номер телефону</th>
+        <th>Електронна пошта</th>
         <th>Стаж роботи</th>
-        <th>Посади</th>
+        <th>Посада</th>
         <th>Відділ</th>
-        <th>Видалити</th>
-        <th>Редагувати</th>
+        <th>Дії</th>
     </tr>
     </thead>
     <tbody>
@@ -34,62 +33,68 @@
         <td th:text="${p.diagnosis}"></td>
         <td th:text="${p.department != null ? p.department.name : 'Без відділу'}"></td>
         <td>
-            <a class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#myconfirm"
-               th:attr="data-bslink=@{/delete_employees(id=${p.id})}, data-bs-text=${p.name}, data-bs-id=${p.id}">Видалити</a>
+            <a th:href="@{'/projects/' + ${p.id} + '/details'}" class="btn btn-outline-info">Деталі</a>
+            <a th:href="@{/edit_employees(id=${p.id})}" class="btn btn-secondary ">✏️ Редагувати</a>
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDelete"
+                    th:attr="data-bs-id=${p.id}, data-bs-text=${p.name}">🗑 Видалити</button>
         </td>
-        <td><a th:href="@{/edit_employees(id=${p.id})}" class="btn btn-sm btn-outline-secondary">Редагувати</a></td>
+
     </tr>
     </tbody>
-
 </table>
-<div class="modal fade" id="myconfirm" data-bsbackdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticWarningLabel" ariahidden="true">
+
+<!-- Модальне вікно підтвердження видалення -->
+<div class="modal fade" id="confirmDelete" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticWarningLabel">Увага!</h1>
-                <button type="button" class="btn-close" databs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title" id="confirmDeleteLabel">Підтвердження видалення</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрити"></button>
             </div>
             <div class="modal-body">
-                Ви впевнені, що хочете видалити пацієнта?<br/>
-                Якщо натиснути видалити, то цю дії <i>не можна
-                скасувати</i>.
+                Ви впевнені, що хочете видалити <strong id="deleteText"></strong>?<br>
+                Цю дію <i>не можна скасувати</i>.
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btnsecondary" data-bs-dismiss="modal">Скасувати</button>
-                <a class="btn btn-danger deletebutton">Видалити</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Скасувати</button>
+                <a id="deleteButton" class="btn btn-danger">Видалити</a>
             </div>
         </div>
     </div>
 </div>
-<script>
-    var myConfirmModal = document.getElementById('myconfirm')
-    myConfirmModal.addEventListener('show.bs.modal', function
-        (event) {
-        var button = event.relatedTarget
-        var link = button.getAttribute('data-bs-link')
-        var tid = button.getAttribute('data-bs-id')
-        var text = button.getAttribute('data-bs-text')
-        var modalTitle = myConfirmModal.querySelector('.modaltitle')
-        modalTitle.textContent = 'Deleting basis: ' + text + '(' + tid + ')'
-        var deleteButton = myConfirmModal.querySelector('.delete-button')
-        deleteButton.setAttribute("href", link)
-    })
-</script>
-<form action="add_employees" method="post">
-    <input type="text" name="name" placeholder="ПІБ" class="form-control-sm">
-    <input type="text" name="address" placeholder="Адреса" class="form-control-sm">
-    <input type="text" name="phone" placeholder="Номер телефона" class="form-control-sm">
-    <input type="text" name="email" placeholder="Елек. пошта" class="form-control-sm">
-    <input type="number" name="medical_card_number" placeholder="Стаж роботи" class="form-control-sm">
-    <input type="text" name="diagnosis" placeholder="Посади" class="form-control-sm">
+
+<!-- Форма для додавання працівника -->
+<h2>Додати нового працівника</h2>
+<form action="/add_employees" method="post">
+    <input type="text" name="name" placeholder="ПІБ" class="form-control-sm" required>
+    <input type="text" name="address" placeholder="Адреса" class="form-control-sm" required>
+    <input type="text" name="phone" placeholder="Номер телефону" class="form-control-sm" required>
+    <input type="email" name="email" placeholder="Електронна пошта" class="form-control-sm" required>
+    <input type="number" name="medical_card_number" placeholder="Стаж роботи" class="form-control-sm" required>
+    <input type="text" name="diagnosis" placeholder="Посада" class="form-control-sm" required>
 
     <select name="departmentId" class="form-control-sm">
         <option value="">Виберіть відділ</option>
         <option th:each="d : ${departments}" th:value="${d.id}" th:text="${d.name}"></option>
     </select>
 
-    <button type="submit" class="btn btn-outline-primary btn-sm">Додати</button>
+    <button type="submit" class="btn btn-outline-primary">➕ Додати</button>
 </form>
+
+<!-- JS для роботи модального вікна -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var confirmDeleteModal = document.getElementById('confirmDelete');
+        confirmDeleteModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var employeeId = button.getAttribute('data-bs-id');
+            var employeeName = button.getAttribute('data-bs-text');
+
+            document.getElementById('deleteText').textContent = employeeName;
+            document.getElementById('deleteButton').setAttribute("href", "/delete_employees?id=" + employeeId);
+        });
+    });
+</script>
 
 <script th:src="@{/webjars/jquery/3.6.4/dist/jquery.js}"></script>
 <script th:src="@{/webjars/popperjs__core/2.11.7/dist/umd/popper.js}"></script>

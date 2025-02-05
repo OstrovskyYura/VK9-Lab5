@@ -14,7 +14,7 @@
     <td th:text="${p.name}"></td>
     <td th:text="${p.employees.size()}"></td>
     <td>
-      <a th:href="@{/projects/delete(id=${p.id})}">Видалити</a>
+      <a th:href="@{/projects/delete(id=${p.id})}" class="btn btn-danger btn-sm">Видалити</a>
     </td>
   </tr>
   </tbody>
@@ -23,5 +23,5 @@
 <h2>Додати новий проєкт</h2>
 <form action="/projects/add" method="post">
   <input type="text" name="name" placeholder="Назва проєкту">
-  <button type="submit">Додати</button>
+  <button type="submit" class="btn btn-outline-primary">Додати проєкт</button>
 </form>

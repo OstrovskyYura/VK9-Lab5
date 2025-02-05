@@ -42,23 +42,25 @@ public class ProjectController {
         return "redirect:/projects";
     }
 
-    @GetMapping("/assign")
-    public String assignEmployeeToProject(@RequestParam long projectId, @RequestParam long employeeId) {
-        Optional<Project> optionalProject = projectRepository.findById(projectId);
-        Optional<Employees> optionalEmployee = employeesRepository.findById((int) employeeId);
+    @PostMapping("/projects/{id}/assign_employee")
+    public String assignEmployeeToProject(@PathVariable("id") Long id, @RequestParam Long employeeId) {
+        Optional<Project> optionalProject = projectRepository.findById(id);
+        Optional<Employees> optionalEmployee = employeesRepository.findById(employeeId);
 
         if (optionalProject.isPresent() && optionalEmployee.isPresent()) {
             Project project = optionalProject.get();
             Employees employee = optionalEmployee.get();
 
-            Set<Employees> employees = project.getEmployees();
-            employees.add(employee);
-            project.setEmployees(employees);
-            projectRepository.save(project);
+            if (!project.getEmployees().contains(employee)) {
+                Set<Employees> employees = project.getEmployees();
+                employees.add(employee);
+                project.setEmployees(employees);
+                projectRepository.save(project);
+            }
         }
-
-        return "redirect:/projects";
+        return "redirect:/projects/" + id;
     }
+
 
     @GetMapping("/{id}")
     public String showProjectDetails(@PathVariable long id, Model model) {
@@ -70,4 +72,32 @@ public class ProjectController {
         return "redirect:/projects";
     }
 
+    @GetMapping("/{id}/assign_employee")
+    public String showAssignEmployeePage(@PathVariable long id, Model model) {
+        Optional<Project> optionalProject = projectRepository.findById(id);
+        if (optionalProject.isPresent()) {
+            List<Employees> employees = employeesRepository.findAll();
+            model.addAttribute("project", optionalProject.get());
+            model.addAttribute("employees", employees);
+            return "project_details";
+        }
+        return "redirect:/projects";
+    }
+
+    @GetMapping("/remove_employee")
+    public String removeEmployeeFromProject(@RequestParam long projectId, @RequestParam long employeeId) {
+        Optional<Project> optionalProject = projectRepository.findById(projectId);
+        Optional<Employees> optionalEmployee = employeesRepository.findById(employeeId);
+
+        if (optionalProject.isPresent() && optionalEmployee.isPresent()) {
+            Project project = optionalProject.get();
+            Employees employee = optionalEmployee.get();
+
+            Set<Employees> employees = project.getEmployees();
+            employees.remove(employee);
+            project.setEmployees(employees);
+            projectRepository.save(project);
+        }
+        return "redirect:/projects/{projectId}";
+    }
 }

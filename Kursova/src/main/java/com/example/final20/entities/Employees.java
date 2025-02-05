@@ -33,5 +33,4 @@ public class Employees {
 
     @ManyToMany(mappedBy = "employees")
     private Set<Project> projects;
-
 }
